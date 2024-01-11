@@ -1,12 +1,45 @@
 [
   {
+    "id": 2,
     "name": "Nadia",
-    "email": "nadia@gmail.com",
-    "password": "1234567890"
+    "workStatus": "",
+    "bornDate": "",
+    "genderOption": "",
+    "religionOption": "",
+    "whatsappNumber": "",
+    "homeAddress": "",
+    "isRegister": false,
+    "avatar": "",
+    "password": "1234567890",
+    "role": "student"
   },
   {
-    "name": "Joko",
-    "email": "joko@gmail.com",
-    "password": "1234567890"
+    "id": 3,
+    "name": "Kane",
+    "workStatus": "",
+    "bornDate": "",
+    "genderOption": "",
+    "religionOption": "",
+    "whatsappNumber": "",
+    "homeAddress": "",
+    "isRegister": false,
+    "avatar": "",
+    "password": "1234567890",
+    "role": "student"
+  },
+  {
+    "id": 4,
+    "name": "Yuli Ana",
+    "workStatus": "",
+    "bornDate": "",
+    "genderOption": "",
+    "religionOption": "",
+    "whatsappNumber": "",
+    "homeAddress": "",
+    "isRegister": false,
+    "avatar": "",
+    "password": "1234567890",
+    "role": "student",
+    "email": "yuli@gmail.com"
   }
 ]
