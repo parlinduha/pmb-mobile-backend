@@ -5,7 +5,7 @@ import path from "path";
 
 const cors = Cors({
   methods: ["POST", "GET", "HEAD"],
-  origin: "http://localhost:2500", // Update with the actual origin of your Angular app
+  origin: "*", // Update with the actual origin of your Angular app
 });
 
 const filePath = path.join(process.cwd(), "data", "students.json");
