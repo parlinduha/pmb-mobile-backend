@@ -1,10 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
+import Cors from "cors";
+
+const cors = Cors({
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Sesuaikan dengan kebutuhan Anda
+});
 
 const filePath = path.join(process.cwd(), "data", "students.json");
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await cors(req, res); // Menjalankan middleware CORS
   if (req.method === "POST") {
     const { email, password } = req.body;
 
@@ -34,3 +39,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 };
+
+export default handler;
