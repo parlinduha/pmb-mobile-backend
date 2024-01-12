@@ -1,17 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
-import Cors from "cors";
-
-const cors = Cors({
-  origin: "http://localhost:2500", // Update with the actual origin of your Angular app
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // Include if you're using cookies or authentication headers
-});
 
 const filePath = path.join(process.cwd(), "data", "students.json");
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await cors(req, res); // Menjalankan middleware CORS
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { email, password } = req.body;
 
@@ -41,5 +34,3 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 };
-
-export default handler;
