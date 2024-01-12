@@ -1,16 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import Cors from "micro-cors";
 import fs from "fs";
 import path from "path";
+import NextCors from "nextjs-cors";
 
-const cors = Cors({
-  methods: ["POST", "GET", "HEAD"],
-  origin: "*", // Update with the actual origin of your Angular app
-});
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Invoking NextCors middleware inside the route handler
+  await NextCors(req, res, {
+    // Options
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  });
 
-const filePath = path.join(process.cwd(), "data", "students.json");
+  const filePath = path.join(process.cwd(), "data", "students.json");
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       const students = JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -37,6 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // If the request method is not POST, return an error
     return res.status(405).json({ error: "Method Not Allowed" });
   }
-};
+}
 
-export default cors(handler);
+export default handler;
