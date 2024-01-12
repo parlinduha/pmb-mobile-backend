@@ -4,7 +4,9 @@ import path from "path";
 import Cors from "cors";
 
 const cors = Cors({
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Sesuaikan dengan kebutuhan Anda
+  origin: "https://pmb-mobile-backend.vercel.app/api/login", // Update with your Ionic Angular app's origin
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // Include if you're using cookies or authentication headers
 });
 
 const filePath = path.join(process.cwd(), "data", "students.json");
