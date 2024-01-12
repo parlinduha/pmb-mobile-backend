@@ -41,5 +41,19 @@
     "password": "1234567890",
     "role": "student",
     "email": "yuli@gmail.com"
+  },
+  {
+    "id": 4,
+    "name": "Admin",
+    "workStatus": "",
+    "bornDate": "",
+    "genderOption": "",
+    "religionOption": "",
+    "whatsappNumber": "",
+    "homeAddress": "",
+    "isRegister": false,
+    "avatar": "",
+    "password": "1234567890",
+    "role": "admin"
   }
 ]
