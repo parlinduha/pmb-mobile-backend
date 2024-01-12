@@ -4,7 +4,7 @@ import path from "path";
 import Cors from "cors";
 
 const cors = Cors({
-  origin: "https://pmb-mobile-backend.vercel.app/api/login", // Update with your Ionic Angular app's origin
+  origin: "http://localhost:2500", // Update with the actual origin of your Angular app
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true, // Include if you're using cookies or authentication headers
 });
