@@ -48,9 +48,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     writeStudentsData(students);
 
-    return res
-      .status(200)
-      .json({ success: true, message: "Registrasi berhasil" });
+    return res.status(200).json({
+      success: true,
+      message: "Registrasi berhasil",
+      data: newStudent,
+    });
   } else {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
