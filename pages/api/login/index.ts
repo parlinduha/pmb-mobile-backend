@@ -19,8 +19,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const students = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
       // Find student by email and password
-      const { email } = req.query;
-      const student = students.find((s: any) => s.email === email);
+      const { email, password } = req.query;
+      const student = students.find(
+        (s: any) => s.email === email && s.password === password
+      );
 
       if (!student) {
         // If student not found, return an error
