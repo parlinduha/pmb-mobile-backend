@@ -14,21 +14,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const filePath = path.join(process.cwd(), "data", "students.json");
 
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     try {
       const students = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
-      // Find student by email
-      const student = students.find((s: any) => s.email === req.body.email);
+      // Find student by email and password
+      const { email, password } = req.query;
+      const student = students.find(
+        (s: any) => s.email === email && s.password === password
+      );
 
-      if (!student || student.password !== req.body.password) {
-        // If student not found or password doesn't match, return an error
-        return res.status(401).json({ error: "Invalid email or password" });
+      if (!student) {
+        // If student not found, return an error
+        return res.status(404).json({ error: "Student not found" });
       }
 
-      // If login is successful, return student data with a message
+      // If retrieval is successful, return student data with a message
       return res.status(200).json({
-        message: "Login successful",
+        message: "Student data retrieved successfully",
         data: { student },
       });
     } catch (error) {
@@ -37,7 +40,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   } else {
-    // If the request method is not POST, return an error
+    // If the request method is not GET, return an error
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 }

@@ -54,6 +54,7 @@
     "isRegister": false,
     "avatar": "",
     "password": "1234567890",
-    "role": "admin"
+    "role": "admin",
+     "email": "admin@admin.com"
   }
 ]
