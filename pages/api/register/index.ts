@@ -42,6 +42,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       avatar: "",
       password: register.password,
       role: "student",
+      email: register.email || "",
     };
 
     students.push(newStudent);
