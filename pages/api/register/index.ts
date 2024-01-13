@@ -15,11 +15,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 
   if (req.method === "GET") {
-    const students = getStudentsData();
-    return res.status(200).json(students);
+    const students = await getStudentsData(); // Use await here
+    return res.status(200).json({
+      success: true,
+      message: "Data Found",
+      data: students,
+    });
   } else if (req.method === "POST") {
     const register = req.body;
-    let students = getStudentsData();
+    let students = await getStudentsData(); // Use await here
 
     const existingStudent = students.find(
       (student) => student.email === register.email
@@ -32,6 +36,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const newStudent = {
       id: students.length + 1,
       name: register.name,
+      email: register.email || "",
       workStatus: register.workStatus || "",
       bornDate: register.bornDate || "",
       genderOption: register.genderOption || "",
@@ -42,7 +47,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       avatar: "",
       password: register.password,
       role: "student",
-      email: register.email || "",
     };
 
     students.push(newStudent);

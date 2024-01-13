@@ -5,8 +5,9 @@ const studentsFilePath = path.join(process.cwd(), "data", "students.json");
 
 export const getStudentsData = (): any[] => {
   try {
-    const studentsData = JSON.parse(fs.readFileSync(studentsFilePath, "utf-8"));
-    return studentsData;
+    console.log("studentsFilePath:", studentsFilePath);
+    const studentsData = fs.readFileSync(studentsFilePath, "utf-8");
+    return JSON.parse(studentsData);
   } catch (error) {
     console.error("Error reading students.json:", error);
     return [];

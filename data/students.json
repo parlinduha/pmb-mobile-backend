@@ -70,7 +70,7 @@
     "avatar": "",
     "password": "1234567890",
     "role": "student"
-  }git ,
+  },
   {
     "id": 6,
     "name": "boy",
@@ -85,5 +85,20 @@
     "password": "1234567890",
     "role": "student",
     "email": "boy@gmail.com"
+  },
+  {
+    "id": 7,
+    "name": "martin",
+    "email": "martin@gmail.com",
+    "workStatus": "",
+    "bornDate": "",
+    "genderOption": "",
+    "religionOption": "",
+    "whatsappNumber": "",
+    "homeAddress": "",
+    "isRegister": false,
+    "avatar": "",
+    "password": "1234567890",
+    "role": "student"
   }
 ]
