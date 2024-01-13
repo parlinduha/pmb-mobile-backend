@@ -14,7 +14,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const filePath = path.join(process.cwd(), "data", "students.json");
 
-  if (req.method === "GET") {
+  if (req.method === "GET" || req.method === "POST") {
     try {
       const students = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
