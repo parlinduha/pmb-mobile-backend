@@ -1,11 +1,19 @@
-// pages/api/students.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import {
   getStudentsData,
   writeStudentsData,
 } from "../../../utils/studentsUtils";
+import NextCors from "nextjs-cors";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Inisialisasi middleware CORS menggunakan nextjs-cors
+  await NextCors(req, res, {
+    // Options
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  });
+
   if (req.method === "GET") {
     const students = getStudentsData();
     return res.status(200).json(students);
@@ -47,3 +55,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 }
+
+export default handler;
