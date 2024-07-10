@@ -1,4 +1,3 @@
-// pages/api/students/[id].ts
 import { NextApiRequest, NextApiResponse } from "next";
 import {
   getStudentsData,
@@ -6,12 +5,21 @@ import {
 } from "../../../utils/studentsUtils";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+  const { id, email } = req.query;
+
+  if (!id && !email) {
+    return res.status(400).json({ error: "Invalid ID or email" });
+  }
+
+  const studentId = id ? Number(id) : undefined;
+  const studentEmail = email ? String(email) : undefined;
 
   if (req.method === "GET") {
-    // GET student by ID
+    // GET student by ID or email
     const students = getStudentsData();
-    const student = students.find((s) => s.id === Number(id));
+    const student = students.find(
+      (s) => s.id === studentId || s.email === studentEmail
+    );
 
     if (student) {
       return res.status(200).json(student);
@@ -19,31 +27,31 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ error: "Student not found" });
     }
   } else if (req.method === "PUT") {
-    // Update student by ID
+    // Update student by ID or email
     const students = getStudentsData();
-    const index = students.findIndex((s) => s.id === Number(id));
+    const index = students.findIndex(
+      (s) => s.id === studentId || s.email === studentEmail
+    );
 
     if (index !== -1) {
       const updatedStudent = { ...students[index], ...req.body };
       students[index] = updatedStudent;
       writeStudentsData(students);
-      return res
-        .status(200)
-        .json({ success: true, message: "Student updated successfully" });
+      return res.status(200).json({ success: true, message: "Student updated successfully" });
     } else {
       return res.status(404).json({ error: "Student not found" });
     }
   } else if (req.method === "DELETE") {
-    // Delete student by ID
+    // Delete student by ID or email
     const students = getStudentsData();
-    const index = students.findIndex((s) => s.id === Number(id));
+    const index = students.findIndex(
+      (s) => s.id === studentId || s.email === studentEmail
+    );
 
     if (index !== -1) {
       students.splice(index, 1);
       writeStudentsData(students);
-      return res
-        .status(200)
-        .json({ success: true, message: "Student deleted successfully" });
+      return res.status(200).json({ success: true, message: "Student deleted successfully" });
     } else {
       return res.status(404).json({ error: "Student not found" });
     }
