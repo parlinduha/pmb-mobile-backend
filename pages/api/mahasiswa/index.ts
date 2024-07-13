@@ -6,14 +6,19 @@ import path from "path";
 import fs from "fs";
 import { getValidEmails } from "../../../utils/studentsUtils";
 
+// Extend NextApiRequest to include file property
+interface NextApiRequestWithFile extends NextApiRequest {
+  file?: Express.Multer.File;
+}
+
 const upload = multer({
   storage: multer.diskStorage({
     destination: path.join(process.cwd(), "uploads"),
-    filename: (req:any, file:any, cb:any) => {
+    filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);
     },
   }),
-  fileFilter: (req:any, file:any, cb:any) => {
+  fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
@@ -34,7 +39,7 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
   });
 };
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequestWithFile, res: NextApiResponse) => {
   await NextCors(req, res, {
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     origin: "*",
@@ -122,7 +127,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         message: "Registrasi berhasil",
         data: newStudent,
       });
-    } catch (err:any) {
+    } catch (err: any) {
       console.error("Error during data handling:", err.message);
       return res.status(500).json({ error: "Error processing data.", details: err.message });
     }
