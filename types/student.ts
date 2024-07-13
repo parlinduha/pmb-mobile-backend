@@ -1,15 +1,15 @@
-export type Person = {
+export interface Student {
   id: string;
   major1: string;
-  major2?: string;
+  major2: string;
   wavePeriod: string;
   class: string;
   fullName: string;
   gender: string;
   birthPlace: string;
   birthDate: string;
-  homePhoneAreaCode?: string;
-  homePhoneNumber?: string;
+  homePhoneAreaCode: string;
+  homePhoneNumber: string;
   mobileNumber: string;
   fullAddress: string;
   subDistrict: string;
@@ -17,21 +17,17 @@ export type Person = {
   city: string;
   province: string;
   email: string;
-  graduationYear?: string;
-  diplomaNumber?: string;
+  graduationYear: string;
+  diplomaNumber: string;
   schoolOrigin: string;
   religion: string;
   fatherName: string;
-  fatherAddress?: string;
+  fatherAddress: string;
   fatherOccupation: string;
-  fatherMobileNumber?: string;
+  fatherMobileNumber: string;
   motherName: string;
-  motherAddress?: string;
+  motherAddress: string;
   motherOccupation: string;
-  motherMobileNumber?: string;
+  motherMobileNumber: string;
   paymentProof: string;
-}
-
-export type ResponseError = {
-  message: string;
 }

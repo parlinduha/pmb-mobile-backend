@@ -25,3 +25,13 @@ export const writeStudentsData = (studentsData: any[]): void => {
     console.error("Error writing to students.json:", error);
   }
 };
+
+export const getValidEmails = (): any[] => {
+  try {
+    const jsonData = fs.readFileSync(studentsFilePath, "utf8");
+    return JSON.parse(jsonData);
+  } catch (error) {
+    console.error("Error reading validEmails.json:", error);
+    return [];
+  }
+};
