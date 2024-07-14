@@ -25,7 +25,7 @@ const upload = multer({
       cb(new Error("Only image files are allowed"));
     }
   },
-  limits: { fileSize: 700 * 1024 }, // max file size 700KB
+  limits: { fileSize: 700 * 1024 }, // max file 
 });
 
 const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
