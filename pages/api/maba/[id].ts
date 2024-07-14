@@ -24,7 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ error: "Student not found" });
     }
   } else if (req.method === "PUT") {
-    // Update student by ID or email
+    // Update student by ID or email address
     try {
       const students = getPeoplesData();
       const index = students.findIndex(
