@@ -13,7 +13,7 @@ interface NextApiRequestWithFile extends NextApiRequest {
 
 const upload = multer({
   storage: multer.diskStorage({
-    destination: path.join(process.cwd(), "uploads"),
+    destination: path.join(process.cwd(), "../../../public/uploads"),
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);
     },
