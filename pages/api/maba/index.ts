@@ -1,102 +1,139 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { NextApiRequest, NextApiResponse } from "next";
+import { getPeoplesData, writePeoplesData } from "../../../utils/peopleUtils";
+import NextCors from "nextjs-cors";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { getValidEmails } from "../../../utils/studentsUtils";
 
-const dataFilePath = path.resolve(process.cwd(), 'data/people.json');
-
-export type Person = {
-  id: string;
-  major1: string;
-  major2?: string;
-  wavePeriod: string;
-  class: string;
-  fullName: string;
-  gender: string;
-  birthPlace: string;
-  birthDate: string;
-  homePhoneAreaCode?: string;
-  homePhoneNumber?: string;
-  mobileNumber: string;
-  fullAddress: string;
-  subDistrict: string;
-  district: string;
-  city: string;
-  province: string;
-  email: string;
-  graduationYear?: string;
-  diplomaNumber?: string;
-  schoolOrigin: string;
-  religion: string;
-  fatherName: string;
-  fatherAddress?: string;
-  fatherOccupation: string;
-  fatherMobileNumber?: string;
-  motherName: string;
-  motherAddress?: string;
-  motherOccupation: string;
-  motherMobileNumber?: string;
-  paymentProof: string;
-};
-
-export type ResponseError = {
-  message: string;
-};
-
-// Helper functions
-const readData = async (): Promise<Person[]> => {
-  const data = await fs.readFile(dataFilePath, 'utf-8');
-  return JSON.parse(data);
-};
-
-const writeData = async (data: Person[]): Promise<void> => {
-  await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Person[] | Person | ResponseError>
-) {
-  try {
-    let people = await readData();
-
-    switch (req.method) {
-      case 'GET':
-        return res.status(200).json(people);
-
-      case 'POST':
-        const newPerson: Person = req.body;
-        if (!newPerson.id) {
-          return res.status(400).json({ message: "ID is required" });
-        }
-        people.push(newPerson);
-        await writeData(people);
-        return res.status(201).json(newPerson);
-
-      case 'PUT':
-        const updatedPerson: Person = req.body;
-        const index = people.findIndex(person => person.id === updatedPerson.id);
-        if (index === -1) {
-          return res.status(404).json({ message: "Person not found" });
-        }
-        people[index] = updatedPerson;
-        await writeData(people);
-        return res.status(200).json(updatedPerson);
-
-      case 'DELETE':
-        const { id } = req.query;
-        const personIndex = people.findIndex(person => person.id === id);
-        if (personIndex === -1) {
-          return res.status(404).json({ message: "Person not found" });
-        }
-        const deletedPerson = people.splice(personIndex, 1);
-        await writeData(people);
-        return res.status(200).json(deletedPerson[0]);
-
-      default:
-        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
-        return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
-    }
-  } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+// Extend NextApiRequest to include file property
+interface NextApiRequestWithFile extends NextApiRequest {
+  file?: Express.Multer.File;
 }
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: path.join(process.cwd(), "uploads"),
+    filename: (req, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    },
+  }),
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+  limits: { fileSize: 700 * 1024 }, // max file 
+});
+
+const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result: any) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+};
+
+const handler = async (req: NextApiRequestWithFile, res: NextApiResponse) => {
+  await NextCors(req, res, {
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200,
+  });
+
+  res.setHeader("Content-Type", "application/json");
+
+  if (req.method === "GET") {
+    const students = await getPeoplesData();
+    return res.status(200).json({
+      success: true,
+      message: "Data Found",
+      data: students,
+    });
+  } else if (req.method === "POST") {
+    try {
+      await runMiddleware(req, res, upload.single("paymentProof"));
+
+      if (!req.body.data) {
+        throw new Error("No data found in request body");
+      }
+
+      const register = JSON.parse(req.body.data);
+
+      let students = await getPeoplesData();
+
+      const existingStudent = students.find(
+        (student) => student.email === register.email
+      );
+
+      if (existingStudent) {
+        return res.status(400).json({ error: "Email sudah terdaftar!" });
+      }
+
+      const validEmails = await getValidEmails();
+      const validEmailData = validEmails.find(
+        (emailData) => emailData.email === register.email
+      );
+
+      if (!validEmailData) {
+        return res.status(400).json({ error: "Email belum terdaftar." });
+      }
+
+      const newStudent = {
+        id: (students.length + 1).toString(),
+        major1: register.major1,
+        major2: register.major2,
+        wavePeriod: register.wavePeriod,
+        class: register.class,
+        fullName: register.fullName,
+        gender: register.gender,
+        birthPlace: register.birthPlace,
+        birthDate: register.birthDate,
+        homePhoneAreaCode: register.homePhoneAreaCode,
+        homePhoneNumber: register.homePhoneNumber,
+        mobileNumber: register.mobileNumber,
+        fullAddress: register.fullAddress,
+        subDistrict: register.subDistrict,
+        district: register.district,
+        city: register.city,
+        province: register.province,
+        email: register.email,
+        graduationYear: register.graduationYear,
+        diplomaNumber: register.diplomaNumber,
+        schoolOrigin: register.schoolOrigin,
+        religion: register.religion,
+        fatherName: register.fatherName,
+        fatherAddress: register.fatherAddress,
+        fatherOccupation: register.fatherOccupation,
+        fatherMobileNumber: register.fatherMobileNumber,
+        motherName: register.motherName,
+        motherAddress: register.motherAddress,
+        motherOccupation: register.motherOccupation,
+        motherMobileNumber: register.motherMobileNumber,
+        paymentProof: req.file ? req.file.filename : "", // Save file name if uploaded
+      };
+
+      students.push(newStudent);
+
+      await writePeoplesData(students);
+
+      return res.status(200).json({
+        success: true,
+        message: "Registrasi berhasil",
+        data: newStudent,
+      });
+    } catch (err: any) {
+      console.error("Error during data handling:", err.message);
+      return res.status(500).json({ error: "Error processing data.", details: err.message });
+    }
+  } else {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+};
+
+export default handler;
