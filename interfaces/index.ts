@@ -40,6 +40,40 @@ export type JadwalBiaya = {
   fee: string
 }
 
+export type Maba = {
+   id: string,
+        major1: string,
+        major2: string,
+        wavePeriod:string,
+        class: string,
+        fullName: string,
+        gender: string,
+        birthPlace: string,
+        birthDate: string,
+        homePhoneAreaCode:string,
+        homePhoneNumber: string,
+        mobileNumber: string,
+        fullAddress: string,
+        subDistrict: string,
+        district: string,
+        city: string,
+        province: string,
+        email: string,
+        graduationYear: string,
+        diplomaNumber: string,
+        schoolOrigin: string,
+        religion: string,
+        fatherName: string,
+        fatherAddress: string,
+        fatherOccupation: string,
+        fatherMobileNumber:string,
+        motherName: string,
+        motherAddress: string,
+        motherOccupation: string,
+        motherMobileNumber: string,
+        paymentProof: string
+}
+
 export type ResponseError = {
   message: string
 }

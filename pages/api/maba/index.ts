@@ -1,139 +1,31 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { Maba } from '../../../interfaces';
 import { getPeoplesData, writePeoplesData } from "../../../utils/peopleUtils";
-import NextCors from "nextjs-cors";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { getValidEmails } from "../../../utils/studentsUtils";
+import Cors from 'nextjs-cors';
 
-// Extend NextApiRequest to include file 
-interface NextApiRequestWithFile extends NextApiRequest {
-  file?: Express.Multer.File;
-}
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: path.join(process.cwd(), "../../../public/uploads"),
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
-    },
-  }),
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true);
-    } else {
-      cb(new Error("Only image files are allowed"));
-    }
-  },
-  limits: { fileSize: 700 * 1024 }, // max filel0
-});
-
-const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-};
-
-const handler = async (req: NextApiRequestWithFile, res: NextApiResponse) => {
-  await NextCors(req, res, {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Maba[] | Maba | { message: string }>
+) {
+  await Cors(req, res, {
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     origin: "*",
-    optionsSuccessStatus: 200,
   });
 
-  res.setHeader("Content-Type", "application/json");
+  let informationData = await getPeoplesData();
 
-  if (req.method === "GET") {
-    const students = await getPeoplesData();
-    return res.status(200).json({
-      success: true,
-      message: "Data Found",
-      data: students,
-    });
-  } else if (req.method === "POST") {
-    try {
-      await runMiddleware(req, res, upload.single("paymentProof"));
-
-      if (!req.body.data) {
-        throw new Error("No data found in request body");
-      }
-
-      const register = JSON.parse(req.body.data);
-
-      let students = await getPeoplesData();
-
-      const existingStudent = students.find(
-        (student) => student.email === register.email
-      );
-
-      if (existingStudent) {
-        return res.status(400).json({ error: "Email sudah terdaftar!" });
-      }
-
-      const validEmails = await getValidEmails();
-      const validEmailData = validEmails.find(
-        (emailData) => emailData.email === register.email
-      );
-
-      if (!validEmailData) {
-        return res.status(400).json({ error: "Email belum terdaftar." });
-      }
-
-      const newStudent = {
-        id: (students.length + 1).toString(),
-        major1: register.major1,
-        major2: register.major2,
-        wavePeriod: register.wavePeriod,
-        class: register.class,
-        fullName: register.fullName,
-        gender: register.gender,
-        birthPlace: register.birthPlace,
-        birthDate: register.birthDate,
-        homePhoneAreaCode: register.homePhoneAreaCode,
-        homePhoneNumber: register.homePhoneNumber,
-        mobileNumber: register.mobileNumber,
-        fullAddress: register.fullAddress,
-        subDistrict: register.subDistrict,
-        district: register.district,
-        city: register.city,
-        province: register.province,
-        email: register.email,
-        graduationYear: register.graduationYear,
-        diplomaNumber: register.diplomaNumber,
-        schoolOrigin: register.schoolOrigin,
-        religion: register.religion,
-        fatherName: register.fatherName,
-        fatherAddress: register.fatherAddress,
-        fatherOccupation: register.fatherOccupation,
-        fatherMobileNumber: register.fatherMobileNumber,
-        motherName: register.motherName,
-        motherAddress: register.motherAddress,
-        motherOccupation: register.motherOccupation,
-        motherMobileNumber: register.motherMobileNumber,
-        paymentProof: req.file ? req.file.filename : "", // Save file name if uploaded
-      };
-
-      students.push(newStudent);
-
-      await writePeoplesData(students);
-
-      return res.status(200).json({
-        success: true,
-        message: "Registrasi berhasil",
-        data: newStudent,
-      });
-    } catch (err: any) {
-      console.error("Error during data handling:", err.message);
-      return res.status(500).json({ error: "Error processing data.", details: err.message });
-    }
+  if (req.method === 'GET') {
+    // Get all information
+    res.status(200).json(informationData);
+  } else if (req.method === 'POST') {
+    // Add new information
+    const newInfo: Maba = req.body;
+    newInfo.id = (informationData.length ? Math.max(...informationData.map((info:any) => parseInt(info.id))) + 1 : 1).toString();
+    informationData.push(newInfo);
+    await writePeoplesData(informationData);
+    res.status(201).json(newInfo);
   } else {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    // Method not allowed
+    res.status(405).json({ message: 'Method Not Allowed' });
   }
-};
-
-export default handler;
+}
