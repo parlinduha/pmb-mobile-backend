@@ -3,5 +3,10 @@
     "title": "JadwalBiaya Title",
     "fee": "1000",
     "id": "1"
+  },
+  {
+    "title": "Teknik Informasi - Regular Pagi",
+    "fee": "2500000",
+    "id": "2"
   }
 ]
