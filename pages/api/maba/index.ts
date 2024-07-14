@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs";
 import { getValidEmails } from "../../../utils/studentsUtils";
 
-// Extend NextApiRequest to include file property
+// Extend NextApiRequest to include file 
 interface NextApiRequestWithFile extends NextApiRequest {
   file?: Express.Multer.File;
 }
@@ -25,7 +25,7 @@ const upload = multer({
       cb(new Error("Only image files are allowed"));
     }
   },
-  limits: { fileSize: 700 * 1024 }, // max file 
+  limits: { fileSize: 700 * 1024 }, // max filel0
 });
 
 const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: any) => {
