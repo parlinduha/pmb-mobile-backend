@@ -3,5 +3,20 @@
     "title": "JadwalBiaya Title",
     "fee": "1000",
     "id": "1"
+  },
+  {
+    "title": "Sistem Informasi - Regular Pagi",
+    "fee": "2500000",
+    "id": "2"
+  },
+  {
+    "title": "Teknik Informatika - Regular Pagi",
+    "fee": "2500000",
+    "id": "3"
+  },
+  {
+    "title": "Teknik Informatika - Regular Pagi",
+    "fee": "2500000",
+    "id": "4"
   }
 ]
