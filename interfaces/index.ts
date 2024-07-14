@@ -9,6 +9,37 @@ export type Person = {
   gender: string
 }
 
+export type Information = {
+  id: string
+  title: string
+  description: string
+  date: string
+}
+
+export type Persyaratan = {
+  id: string
+  title: string
+  description: string
+}
+
+export type Prosedure = {
+  id: string
+  title: string
+  description: string
+}
+
+export type Perkuliahan = {
+  id: string
+  title: string
+  description: string
+}
+
+export type JadwalBiaya = {
+  id: string
+  title: string
+  fee: string
+}
+
 export type ResponseError = {
   message: string
 }

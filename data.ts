@@ -100,3 +100,44 @@ export const people = [
     gender: 'male',
   },
 ]
+
+export const jadwalBiaya = [
+  {
+     "id": "1",
+      "title": "JadwalBiaya Title",
+      "fee": "1000"
+  }
+]
+
+export const perkuliahan = [
+   {
+      "id": "1",
+      "title": "Perkuliahan Title",
+      "description": "Perkuliahan Description"
+    }
+]
+
+export const persyaratan = [
+   {
+      "id": "1",
+      "title": "Persyaratan Title",
+      "description": "Persyaratan Description"
+    }
+]
+
+export const information = [
+   {
+      "id": "1",
+      "title": "Information Title",
+      "description": "Information Description",
+      "date": "2022-01-01"
+    }
+]
+
+export const prosedure = [
+    {
+      "id": "1",
+      "title": "Prosedure Title",
+      "description": "Prosedure Description"
+    }
+]

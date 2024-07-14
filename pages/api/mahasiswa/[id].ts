@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPeoplesData, writePeoplesData } from "../../../utils/peopleUtils";
+import Cors from 'nextjs-cors';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id, email } = req.query;

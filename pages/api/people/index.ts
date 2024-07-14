@@ -1,10 +1,22 @@
 import { NextApiResponse, NextApiRequest } from 'next'
-import { people } from '../../../data'
-import { Person } from '../../../interfaces'
+import { information, persyaratan, perkuliahan, prosedure, jadwalBiaya } from '../../../data'
+import { Information, Persyaratan, Perkuliahan, Prosedure, JadwalBiaya } from '../../../interfaces'
 
 export default function handler(
   _req: NextApiRequest,
-  res: NextApiResponse<Person[]>
+  res: NextApiResponse<{
+    information: Information[],
+    persyaratan: Persyaratan[],
+    perkuliahan: Perkuliahan[],
+    prosedure: Prosedure[],
+    jadwalBiaya: JadwalBiaya[]
+  }>
 ) {
-  return res.status(200).json(people)
+  return res.status(200).json({
+    information,
+    persyaratan,
+    perkuliahan,
+    prosedure,
+    jadwalBiaya
+  });
 }
